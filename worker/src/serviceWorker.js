@@ -11,9 +11,10 @@ export function registerServiceWorker() {
     navigator.serviceWorker.register('/serviceWorker.js', {scope: '/'})
     .then(registration => {
       console.log('Service Worker register success! Scope is' + registration.scope);
+      postMessage('Hi, I am main script');
     })
     .then(() => {
-      
+      onMessage();
     })
     .catch(error => {
       console.log(error);
@@ -25,12 +26,29 @@ export function registerServiceWorker() {
 }
 
 /**
+ * 手动更新 serviceWorker
+ */
+/*
+const version = '1.0.1';
+
+navigator.serviceWorker.register('/serviceWorker.js', {scope: '/'})
+.then(registration => {
+  if (localStorage.getItem('sw_version') !== version) {
+    registration.update().then(() => {
+      localStorage.setItem('sw_version', version);
+    });
+  }
+});
+*/
+
+/**
  * 注销 serviceWorker
  */
 export function unregisterServiceWorker() {
   if (navigator.serviceWorker) {
     navigator.serviceWorker.ready.then(registration => {
       registration.unregister();
+      console.log('Service Worker unregister success!');
     });
   }
 }
@@ -45,5 +63,18 @@ export function postMessage(msg) {
   const controller = navigator.serviceWorker.controller;
   if (controller) {
     controller.postMessage(msg, []);
+    console.log('post message to Service Worker!');
+  }
+}
+
+/**
+ * 页面从 serviceWorker 接受消息
+ */
+function onMessage() {
+  if (navigator.serviceWorker) {
+    navigator.serviceWorker.addEventListener('message', event => {
+      console.log('Recieve message from serviceWorker');
+      console.log(event.data);
+    });
   }
 }

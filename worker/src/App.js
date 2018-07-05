@@ -2,8 +2,12 @@ import React, { Component } from 'react';
 import logo from './logo.svg';
 import './App.css';
 
+import WrokerWrapper from './WorkerWrapper';
+
 import { registerServiceWorker, unregisterServiceWorker} from './serviceWorker';
 import { createWorker, terminateWorker }  from './worker';
+import WorkerWrapper from './WorkerWrapper';
+import ServiceWorkerWrapper from './ServiceWorkerWrapper';
 
 class App extends Component {
   componentDidMount() {
@@ -20,12 +24,13 @@ class App extends Component {
     return (
       <div className="App">
         <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h1 className="App-title">Welcome to React</h1>
+          {/* <img src={logo} className="App-logo" alt="logo" /> */}
+          <h1 className="App-title">Web Workers & Service Workers</h1>
         </header>
-        <p className="App-intro">
-          To get started, edit <code>src/App.js</code> and save to reload.
-        </p>
+        <div className="container">
+          <WorkerWrapper/>
+          <ServiceWorkerWrapper/>
+        </div>
       </div>
     );
   }

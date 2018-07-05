@@ -2,6 +2,8 @@
  * Service Worker
  */
 
+ // test
+
 const CACHE_NAME = 'sw-v1';
 const urlsToCache = [
   '/',
@@ -20,14 +22,59 @@ self.addEventListener('install', event => {
       return cache.addAll(urlsToCache);
     })
   );
+  console.log('Service Worker install success!');
+  postMessage();
 });
 
 /**
  * activate
  */
 self.addEventListener('activate', event => {
+  const cacheWhitelist = [CACHE_NAME];
 
+  event.waitUntil(
+    caches.keys().then(function(keyList) {
+      return Promise.all(keyList.map(function(key) {
+        if (cacheWhitelist.indexOf(key) === -1) {
+          return caches.delete(key);
+        }
+      }));
+    })
+  );
+
+  console.log('Service Worker activate success!');
+  postMessage();
 });
+
+/**
+ * 自动更新 serviceWoker
+ */
+/*
+self.addEventListener('install', event => {
+  event.waitUntil(self.skipWaiting());
+  console.log('Service Worker install success!');
+});
+
+self.addEventListener('activate', event => {
+  const cacheWhitelist = [CACHE_NAME];
+
+  event.waitUntil(
+    Promise.all([
+      // 更新所有客户端
+      self.clients.claim(),
+      // 清理旧版本缓存
+      caches.keys().then(function(keyList) {
+        return Promise.all(keyList.map(function(key) {
+          if (cacheWhitelist.indexOf(key) === -1) {
+            return caches.delete(key);
+          }
+        }));
+      })
+    ])
+  );
+  console.log('Service Worker activate success!');
+});
+*/
 
 /**
  * fetch
@@ -61,6 +108,7 @@ self.addEventListener('fetch', event => {
  * 监听 message 事件获取页面发送的消息
  */
 self.addEventListener('message', event => {
+  console.log('Recieve message from main script');
   console.log(event.data);
 });
 
@@ -76,11 +124,14 @@ self.addEventListener('offline', () => {
  * serviceWorker 发送消息给页面
  * 页面句柄从 self.clients 中得到
  */
-self.clients.matchAll().then(clientList => {
-  clientList.forEach(client => {
-    client.postMessage('Hi, I am send from Service worker！')
+
+function postMessage(msg) {
+  self.clients.matchAll().then(clientList => {
+    clientList.forEach(client => {
+      client.postMessage(msg || 'Hi, I am send from Service worker！')
+    });
   });
-});
+}
 
 /**
  * unhandledrejection
