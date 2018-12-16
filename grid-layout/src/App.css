@@ -1,5 +1,6 @@
 .App {
   text-align: center;
+  height: 100vh;
 }
 
 .App-logo {
@@ -22,7 +23,7 @@
   color: #61dafb;
 }
 
-.container {
+/* .container {
   height: 100%;
   display: grid;
   padding: 48px;
@@ -42,10 +43,7 @@
 }
 
 .item-1 {
-  grid-column-start: 1;
-  grid-column-end: 4;
-  /* 等价于 */
-  /* grid-column: 1 / 5; */
+  grid-column: 1 / 5;
 
   grid-row: 1 / 4;
 }
@@ -65,6 +63,43 @@
 
 .item-7 {
   grid-row: 4 / 8;
+} */
+
+.container {
+  height: 100%;
+  display: grid;
+  grid-template-rows: 200px 1fr 200px;
+  grid-template-columns: 200px 1fr 200px;
+}
+
+.item {
+  margin: 8px;
+  padding: 16px;
+  font-size: 80px;
+  color: #ff0055;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.header {
+  grid-column: 1 / 4;
+}
+
+.nav {
+}
+
+.main {
+  /* grid-row: 2 / 4;
+  grid-column: 2 / 4; */
+}
+
+.aside {
+  /* grid-row: 2 / 4; */
+}
+
+.footer {
+  grid-column: 1 / 4;
 }
 
 @keyframes App-logo-spin {
